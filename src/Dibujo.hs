@@ -102,11 +102,17 @@ cuarteto f1 f2 f3 f4 = (.-.) ((///) f1 f2) ((///) f3 f4)
 
 -- un cuarteto donde se repite la imagen, rotada (¡No confundir con encimar4!)
 ciclar :: Dibujo a -> Dibujo a
-ciclar = undefined
+ciclar f1 = cuarteto f1 (rotar f1) (rotar (rotar f1)) (rotar (rotar (rotar f1)))
 
 -- map para nuestro lenguaje
 mapDib :: (a -> b) -> Dibujo a -> Dibujo b
-mapDib = undefined
+mapDib _ Figura = Figura
+mapDib f (Rotar d) = Rotar (mapDib f d)
+mapDib f (Espejar d) = Espejar (mapDib f d)
+mapDib f (Rot45 d) = Rot45 (mapDib f d)
+mapDib f (Apilar x y d1 d2) = Apilar x y (mapDib f d1) (mapDib f d2)
+mapDib f (Juntar x y d1 d2) = Juntar x y (mapDib f d1) (mapDib f d2)
+mapDib f (Encimar d1 d2) = Encimar (mapDib f d1) (mapDib f d2)
 
 -- verificar que las operaciones satisfagan
 -- 1. map figura = id
