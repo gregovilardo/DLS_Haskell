@@ -1,12 +1,12 @@
-module Interp
-  ( interp,
+module Interp (
+    interp,
     initial,
-  )
+)
 where
 
 import Dibujo
 import FloatingPic
-import Graphics.Gloss (Display (InWindow), color, display, makeColorI, pictures, translate, white, Picture)
+import Graphics.Gloss (Display (InWindow), Picture, color, display, makeColorI, pictures, translate, white)
 import qualified Graphics.Gloss.Data.Point.Arithmetic as V
 
 -- Dada una computación que construye una configuración, mostramos por
@@ -24,25 +24,43 @@ initial (Conf n dib intBas) size = display win white $ withGrid fig size
 
 -- Interpretación de (^^^)
 ov :: Picture -> Picture -> Picture
-ov p q = undefined
+ov p q = pictures [p, q]
 
+-- Interpretación de (rot45)
 r45 :: FloatingPic -> FloatingPic
-r45 = undefined
+r45 f d w h = f (d V.+ half (w V.+ h)) (half (w V.+ h)) (half (h V.- w))
 
+-- Interpretación de (rotar))
 rot :: FloatingPic -> FloatingPic
-rot = undefined
+rot f d w h = f (d V.+ w) w (V.negate h)
 
+-- Interpretación de (espejar)
 esp :: FloatingPic -> FloatingPic
-esp = undefined
+esp f d w h = f (d V.+ w) (V.negate w) h
 
+-- Interpretación de (encimar)
 sup :: FloatingPic -> FloatingPic -> FloatingPic
-sup = undefined
+-- pictures es una funcion que combina dos imagenes
+sup f g d w h = pictures [f d w h, g d w h]
 
+-- Interpretación de (juntar)
 jun :: Float -> Float -> FloatingPic -> FloatingPic -> FloatingPic
-jun = undefined
+jun m n f g d w h = pictures [f d w' h, g (d V.+ w') (r' V.* w) h]
+  where
+    r' = n / (n + m)
+    r = m / (n + m)
+    w' = r V.* w
 
+-- Interpretación de (apilar)
 api :: Float -> Float -> FloatingPic -> FloatingPic -> FloatingPic
-api = undefined
+api m n f g d w h = pictures [f (d V.+ h') w (r V.* h), g d w h']
+  where
+    r' = n / (m + n)
+    r = m / (m + n)
+    h' = r' V.* h
 
+-- Función de interpretación general
+-- pasar de una interpretacion de figura basica a una de dibujo ?
 interp :: Output a -> Output (Dibujo a)
-interp b = undefined
+interp interBas dib = foldDib interBas rot esp r45 api jun sup dib
+

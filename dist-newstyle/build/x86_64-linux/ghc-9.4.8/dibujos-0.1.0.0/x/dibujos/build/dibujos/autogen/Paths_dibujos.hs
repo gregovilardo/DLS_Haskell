@@ -1,5 +1,8 @@
 {-# LANGUAGE CPP #-}
 {-# LANGUAGE NoRebindableSyntax #-}
+#if __GLASGOW_HASKELL__ >= 810
+{-# OPTIONS_GHC -Wno-prepositive-qualified-module #-}
+#endif
 {-# OPTIONS_GHC -fno-warn-missing-import-lists #-}
 {-# OPTIONS_GHC -w #-}
 module Paths_dibujos (
@@ -41,6 +44,7 @@ getBinDir, getLibDir, getDynLibDir, getDataDir, getLibexecDir, getSysconfDir :: 
 
 
 
+
 bindir, libdir, dynlibdir, datadir, libexecdir, sysconfdir :: FilePath
 bindir     = "/home/gregovilardo/.cabal/bin"
 libdir     = "/home/gregovilardo/.cabal/lib/x86_64-linux-ghc-9.4.8/dibujos-0.1.0.0-inplace-dibujos"
@@ -55,7 +59,6 @@ getDynLibDir  = catchIO (getEnv "dibujos_dynlibdir")  (\_ -> return dynlibdir)
 getDataDir    = catchIO (getEnv "dibujos_datadir")    (\_ -> return datadir)
 getLibexecDir = catchIO (getEnv "dibujos_libexecdir") (\_ -> return libexecdir)
 getSysconfDir = catchIO (getEnv "dibujos_sysconfdir") (\_ -> return sysconfdir)
-
 
 
 

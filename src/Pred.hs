@@ -17,7 +17,9 @@ type Pred a = a -> Bool
 -- Por ejemplo, `cambiar (== Triangulo) (\x -> Rotar (Figura x))` rota
 -- todos los triángulos.
 cambiar :: Pred a -> (a -> Dibujo a) -> Dibujo a -> Dibujo a
-cambiar p f d = foldr (\x acc -> if p x then mapDib f d)  
+cambiar p f d = mapDib (\x -> if p x then f x else figura x) d
+
+-- cambiar p f d = foldr (\x -> if p x then f x)
 
 -- De las siguientes dos funciones esperaria que anyDib sea mas rapida
 -- Alguna básica satisface el predicado.

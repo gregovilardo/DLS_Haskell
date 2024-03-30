@@ -1,8 +1,9 @@
 module Main (main) where
 
 import Control.Monad (when)
-import Dibujos.Cuadrados (cuadConf)
-import Dibujos.Ejemplo (ejemploConf)
+
+-- import Dibujos.Cuadrados (cuadConf)
+-- import Dibujos.Ejemplo (ejemploConf)
 import Dibujos.Feo (feoConf)
 import FloatingPic (Conf (..))
 import Interp (initial)
@@ -13,7 +14,7 @@ import System.Exit (exitFailure, exitSuccess)
 
 -- Lista de configuraciones de los dibujos
 configs :: [Conf]
-configs = [ejemploConf, feoConf, cuadConf 3]
+configs = [feoConf]
 
 configsH :: [ConfH]
 configsH = map (\(Conf n p _) -> simpleHaha n p) configs
