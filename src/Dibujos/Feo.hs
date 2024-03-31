@@ -1,9 +1,9 @@
 module Dibujos.Feo where
 
-import Dibujo (Dibujo, figura, juntar, apilar, rot45, rotar, encimar, espejar)
-import FloatingPic(Conf(..), Output, half, zero)
+import Dibujo (Dibujo, apilar, encimar, espejar, figura, juntar, rot45, rotar)
+import FloatingPic (Conf (..), Output, half, zero)
+import Graphics.Gloss (Picture, blue, color, line, pictures, red)
 import qualified Graphics.Gloss.Data.Point.Arithmetic as V
-import Graphics.Gloss ( Picture, blue, red, color, line, pictures )
 
 -- Les ponemos colorcitos para que no sea _tan_ feo
 data Color = Azul | Rojo
@@ -28,23 +28,32 @@ colorear Rojo = color red
 interpBasicaSinColor :: Output BasicaSinColor
 interpBasicaSinColor Rectangulo x y w = line [x, x V.+ y, x V.+ y V.+ w, x V.+ w, x]
 interpBasicaSinColor Cruz x y w = pictures [line [x, x V.+ y V.+ w], line [x V.+ y, x V.+ w]]
-interpBasicaSinColor Triangulo x y w = line $ map (x V.+) [(0,0), y V.+ half w, w, (0,0)]
-interpBasicaSinColor Efe x y w = line . map (x V.+) $ [
-        zero,uX, p13, p33, p33 V.+ uY , p13 V.+ uY,
-        uX V.+ 4 V.* uY ,uX V.+ 5 V.* uY, x4 V.+ y5,
-        x4 V.+ 6 V.* uY, 6 V.* uY, zero
-    ]
-    where
-        p33 = 3 V.* (uX V.+ uY)
-        p13 = uX V.+ 3 V.* uY
-        x4 = 4 V.* uX
-        y5 = 5 V.* uY
-        uX = (1/6) V.* y
-        uY = (1/6) V.* w
+interpBasicaSinColor Triangulo x y w = line $ map (x V.+) [(0, 0), y V.+ half w, w, (0, 0)]
+interpBasicaSinColor Efe x y w =
+    line . map (x V.+) $
+        [ zero
+        , uX
+        , p13
+        , p33
+        , p33 V.+ uY
+        , p13 V.+ uY
+        , uX V.+ 4 V.* uY
+        , uX V.+ 5 V.* uY
+        , x4 V.+ y5
+        , x4 V.+ 6 V.* uY
+        , 6 V.* uY
+        , zero
+        ]
+  where
+    p33 = 3 V.* (uX V.+ uY)
+    p13 = uX V.+ 3 V.* uY
+    x4 = 4 V.* uX
+    y5 = 5 V.* uY
+    uX = (1 / 6) V.* y
+    uY = (1 / 6) V.* w
 
 interpBas :: Output Basica
 interpBas (b, c) x y w = colorear c $ interpBasicaSinColor b x y w
-
 
 -- Diferentes tests para ver que estén bien las operaciones
 figRoja :: BasicaSinColor -> Dibujo Basica
@@ -84,12 +93,12 @@ flipante2 b = espejar $ apilados2 b
 row :: [Dibujo a] -> Dibujo a
 row [] = error "row: no puede ser vacío"
 row [d] = d
-row (d:ds) = juntar 1 (fromIntegral $ length ds) d (row ds)
+row (d : ds) = juntar 1 (fromIntegral $ length ds) d (row ds)
 
 column :: [Dibujo a] -> Dibujo a
 column [] = error "column: no puede ser vacío"
 column [d] = d
-column (d:ds) = apilar 1 (fromIntegral $ length ds) d (column ds)
+column (d : ds) = apilar 1 (fromIntegral $ length ds) d (column ds)
 
 grilla :: [[Dibujo a]] -> Dibujo a
 grilla = column . map row
@@ -101,16 +110,19 @@ efe :: Dibujo Basica
 efe = figura (Efe, Azul)
 
 testAll :: Dibujo Basica
-testAll = grilla [
-    [cruzTangulo         , rot45 cruzTangulo   , efe                , rot45 efe                ],
-    [apilados Rectangulo , apilados2 Rectangulo, juntados Rectangulo, juntados2 Rectangulo     ],
-    [flipante1 Rectangulo, flipante2 Rectangulo, figRoja Triangulo  , rotar $ figAzul Triangulo],
-    [rotar $ apilados Efe, apilados2 Efe       , juntados Efe       , juntados2 Efe            ]
-    ]
+testAll =
+    grilla
+        [ [cruzTangulo, rot45 cruzTangulo, efe, rot45 efe]
+        , [apilados Rectangulo, apilados2 Rectangulo, juntados Rectangulo, juntados2 Rectangulo]
+        , [flipante1 Rectangulo, flipante2 Rectangulo, figRoja Triangulo, rotar $ figAzul Triangulo]
+        , [rotar $ apilados Efe, apilados2 Efe, juntados Efe, juntados2 Efe]
+        ]
 
 feoConf :: Conf
-feoConf = Conf {
-    name = "Feo"
-    , pic = testAll
-    , bas = interpBas
-}
+feoConf =
+    Conf
+        { name = "Feo"
+        , pic = testAll
+        , bas = interpBas
+        }
+

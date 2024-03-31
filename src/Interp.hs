@@ -32,7 +32,7 @@ r45 f d w h = f (d V.+ half (w V.+ h)) (half (w V.+ h)) (half (h V.- w))
 
 -- Interpretación de (rotar))
 rot :: FloatingPic -> FloatingPic
-rot f d w h = f (d V.+ w) w (V.negate h)
+rot f d w h = f (d V.+ w) h (V.negate w)
 
 -- Interpretación de (espejar)
 esp :: FloatingPic -> FloatingPic
@@ -63,4 +63,3 @@ api m n f g d w h = pictures [f (d V.+ h') w (r V.* h), g d w h']
 -- pasar de una interpretacion de figura basica a una de dibujo ?
 interp :: Output a -> Output (Dibujo a)
 interp interBas dib = foldDib interBas rot esp r45 api jun sup dib
-
