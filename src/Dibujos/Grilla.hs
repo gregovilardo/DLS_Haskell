@@ -5,6 +5,8 @@ import FloatingPic (Conf (..), Output, half, zero)
 import Graphics.Gloss (Picture, arc, blue, circle, color, line, pictures, polygon, red, rotate, scale, translate)
 import qualified Graphics.Gloss.Data.Point.Arithmetic as V
 
+import Debug.Trace
+
 -- Les ponemos colorcitos para que no sea _tan_ feo
 data Color = Azul | Rojo
     deriving (Show, Eq)
@@ -29,30 +31,25 @@ colorear Rojo = color red
 -- por ahi deban ajustarlas
 interpBasicaSinColor :: Output Numeros
 interpBasicaSinColor Uno x w y =
-    pictures
+    trace
+        ("esto es x:" ++ show x ++ " esto es y: " ++ show y ++ " y esto w: " ++ show w)
+        pictures
         [ line [x V.+ half w V.+ (0.1 V.* y), x V.+ half w V.+ (0.9 V.* y), x V.+ (0.75 V.* y) V.+ (0.25 V.* w)]
         ]
+-- interpBasicaSinColor Cero (x1, x2) (w1, w2) (y1, y2) =
 interpBasicaSinColor Cero x w y =
+    trace
+        ("esto es x:" ++ show x ++ " esto es y: " ++ show y ++ " y esto w: " ++ show w)
+        pictures
+        [ line [x V.+ (cc1 V.* y) V.+ (cc2 V.* w) | (cc1, cc2) <- zip [0.9, 0.8, 0.5, 0.2, 0.1, 0.2, 0.5, 0.8, 0.9] [0.5, 0.25, 0.15, 0.25, 0.5, 0.75, 0.85, 0.75, 0.5]]
+        ]
+interpBasicaSinColor Dos x w y =
     pictures
         [ line
-            [ x V.+ (0.9 V.* y) V.+ half w
-            , x V.+ (0.8 V.* y) V.+ (0.25 V.* w)
-            , x V.+ (0.5 V.* y) V.+ (0.15 V.* w)
-            , x V.+ (0.2 V.* y) V.+ (0.25 V.* w)
-            , x V.+ (0.1 V.* y) V.+ half w
-            , x V.+ (0.2 V.* y) V.+ (0.75 V.* w)
-            , x V.+ (0.5 V.* y) V.+ (0.85 V.* w)
-            , x V.+ (0.8 V.* y) V.+ (0.75 V.* w)
-            , x V.+ (0.9 V.* y) V.+ half w
-            ]
+            [x V.+ (cc1 V.* y) V.+ (cc2 V.* w) | (cc1, cc2) <- zip [0.5, 0.8, 0.9, 0.8, 0.5] [0.85, 0.75, 0.5, 0.25, 0.15, 0.25]]
+        , line
+            [x V.+ (0.5 V.* y) V.+ (0.85 V.* w), x V.+ (0.15 V.* y) V.+ (0.15 V.* w), x V.+ (0.15 V.* y) V.+ (0.85 V.* w)]
         ]
--- pictures
---     [ line [x V.+ (0.25 V.* y) V.+ (0.25 V.* w), x V.+ (0.25 V.* y) V.+ (0.75 V.* w)]
---     , line [x V.+ (0.75 V.* y) V.+ (0.25 V.* w), x V.+ (0.75 V.* y) V.+ (0.75 V.* w)]
---     , translate xv (yv * 1.5) $ arc 0.0 180.0 200.0
---     , translate xv (yv / 2) $ arc 180.0 0.0 200.0
---     ]
-
 interpBasicaSinColor _ x y w =
     pictures
         [ rotate t (scale 2 1 (circle 50))
@@ -94,6 +91,12 @@ figRoja b = figura (b, Rojo)
 
 figAzul :: Numeros -> Dibujo Basica
 figAzul b = figura (b, Azul)
+
+espejarNum :: Numeros -> Dibujo Basica
+espejarNum b = espejar (figAzul b)
+
+rotarNum :: Numeros -> Dibujo Basica
+rotarNum b = rotar (figAzul b)
 
 -- Debería mostrar un rectángulo azul arriba de otro rojo,
 -- conteniendo toda la grilla dentro
@@ -146,9 +149,9 @@ grilla = column . map row
 
 testAll :: Dibujo Basica
 testAll =
-    grilla [[figAzul Uno]]
+    -- grilla [[figAzul Dos]]
 
--- grilla [[juntados Uno Cero], [juntados Uno Cero], [juntados Uno Cero], [juntados Uno Cero]]
+    grilla [[juntados Cero Uno], [juntados Cero Dos], [juntados Uno Dos]]
 
 -- [ [cruzTangulo, rot45 cruzTangulo, efe, rot45 efe]
 -- , [apilados Rectangulo, apilados2 Rectangulo, juntados Rectangulo, juntados2 Rectangulo]
