@@ -38,8 +38,6 @@ data Dibujo a
     | Encimar (Dibujo a) (Dibujo a)
     deriving (Eq, Show)
 
-data Figura = Triangulo | Rectangulo deriving (Eq, Show)
-
 -- combinadores
 infixr 6 ^^^
 
@@ -90,7 +88,7 @@ r90 :: Dibujo a -> Dibujo a
 r90 = comp 2 rotar
 
 r180 :: Dibujo a -> Dibujo a
-r180 = comp 2 r90
+r180 = comp 4 rotar
 
 r270 :: Dibujo a -> Dibujo a
 r270 = comp 6 rotar

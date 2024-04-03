@@ -5,6 +5,7 @@ import Control.Monad (when)
 -- import Dibujos.Cuadrados (cuadConf)
 -- import Dibujos.Ejemplo (ejemploConf)
 
+import Dibujos.Escher (escherConf)
 import Dibujos.Feo (feoConf)
 import Dibujos.Grilla (grillaConf)
 import FloatingPic (Conf (..))
@@ -16,7 +17,7 @@ import System.Exit (exitFailure, exitSuccess)
 
 -- Lista de configuraciones de los dibujos
 configs :: [Conf]
-configs = [grillaConf, feoConf]
+configs = [grillaConf, feoConf, escherConf]
 
 configsH :: [ConfH]
 configsH = map (\(Conf n p _) -> simpleHaha n p) configs

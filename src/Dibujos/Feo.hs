@@ -125,4 +125,3 @@ feoConf =
         , pic = testAll
         , bas = interpBas
         }
-
